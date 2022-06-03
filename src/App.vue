@@ -1,29 +1,37 @@
 <template>
   <div id="nav">
-    Calcular Volume de um Cilindro
+    <h2>Cylinder Volume Calculator</h2>
   </div>
   <router-view />
 </template>
 
 <style lang="scss">
+body {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  background: #3d405b;
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  width: 100%;
 }
 
 #nav {
-  padding: 30px;
+  background: #e07a5f;
+  padding: 12px;
+  font-size: 1.2rem;
+  color: white;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  h2 {
+    padding: 0;
   }
 }
 </style>
