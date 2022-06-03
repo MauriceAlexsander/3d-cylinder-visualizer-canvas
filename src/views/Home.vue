@@ -1,14 +1,19 @@
 <template>
   <div class="home">
-    <Form msg="Welcome to Your Vue.js + TypeScript App" />
+    <Form v-model:height_model="height" v-model:radius_model="radius" />
 
-    <CilinderCanvas />
+    <CylinderCanvas :height="height" :radius="radius" />
   </div>
 </template>
 
 <script lang="ts" setup>
+import {Ref, ref } from "vue";
 import Form from "@/components/Form.vue";
-import CilinderCanvas from "@/components/CilinderCanvas.vue";
+import CylinderCanvas from "@/components/CylinderCanvas.vue";
+
+
+const height: Ref<number> = ref(0);
+const radius: Ref<number> = ref(0);
 </script>
 
 <style lang="scss" scoped>
