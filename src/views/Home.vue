@@ -27,6 +27,8 @@ const radius: Ref<number> = ref(0);
 @media screen and (max-width: 1080px) {
   .home {
     flex-direction: column-reverse;
+    justify-content: flex-start;
+    height: auto;
   }
 }
 </style>
