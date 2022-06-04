@@ -72,7 +72,7 @@ const draw = () => {
   align-items: center;
   flex-direction: column;
   width: 50%;
-  color: #F2CC8F;
+  color: var(--yellow);
 }
 
 @media screen and (max-width: 1080px) and (max-height: 900px) {

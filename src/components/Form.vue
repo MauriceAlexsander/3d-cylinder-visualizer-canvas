@@ -43,7 +43,7 @@ const volume: ComputedRef<string> = computed(() => `${(Math.PI * Math.pow(radius
 .form-container {
   display: flex;
   justify-content: center;
-  color: #F2CC8F;
+  color: var(--yellow);
   width: 50%;
   font-size: 2rem;
 
