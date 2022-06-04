@@ -1,12 +1,14 @@
 <template>
   <div class="canvas">
     <h3>Cylinder Visualizer</h3>
-    <canvas ref="myCanvas" width="400" height="400"></canvas>
+    <canvas id="canvas" width="400" height="400"></canvas>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { defineProps, ref, Ref, watch } from "vue";
+import { defineProps, onMounted, watch } from "vue";
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 // Props
 const props = defineProps({ 
@@ -14,55 +16,55 @@ const props = defineProps({
   radius: { type: Number, required: true },
 });
 
-// Data
-const myCanvas: Ref<HTMLCanvasElement | null> = ref(null);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#3d405b')
 
-watch(() => props.height, () => {
-  draw();
-});
-watch(() => props.radius, () => {
-  draw();
-});
+const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+camera.position.setY(15);
+camera.position.setZ(20);
 
+let renderer: THREE.WebGLRenderer;
+let controls: any;
 
-// Methods
-const draw = () => {
-  if (myCanvas.value == null) return;
-  const ctx = myCanvas.value.getContext("2d")
+const geometry = new THREE.CylinderGeometry(10, 10, 20, 16, 1);
+const material = new THREE.MeshStandardMaterial( {color: '#e07a5f'});
+const cylinder = new THREE.Mesh(geometry,  material);
+scene.add(cylinder);
 
-  if (ctx == null) return;
-  ctx.clearRect(0, 0, myCanvas.value.width, myCanvas.value.height)
+const pointLight = new THREE.PointLight('#fff', 5, 100);
+pointLight.position.set(50, 50, 50);
 
-  ctx.strokeStyle = '#f4f1de'
-  ctx.lineWidth = 3
+const ambientLight = new THREE.AmbientLight('#fff')
+scene.add(ambientLight, pointLight);
 
-  const MAX_RADIUS = 200
-  const MAX_HEIGHT = 400
+function animate() {
+  requestAnimationFrame(animate);
 
-  let height = props.height
-  let radius = props.radius
+  controls.update();
 
-  if (height >= radius * 2) {
-    height = MAX_HEIGHT * 0.8
-    radius = radius * height/props.height
-
-    if ((radius + height) > MAX_HEIGHT && props.height <= MAX_HEIGHT) {
-      height -= props.radius
-      radius -= props.radius/2
-    }
-  }
-  else {
-    radius = MAX_RADIUS * 0.8
-    height = height * radius/props.radius
-  }
-
-  ctx.beginPath();
-  ctx.ellipse(MAX_RADIUS, (MAX_HEIGHT/2) - height/2, radius, radius/2, 0, 0, 2 * Math.PI);
-  ctx.ellipse(MAX_RADIUS, (MAX_HEIGHT/2) + height/2, radius, radius/2, 0, 0, 2 * Math.PI);
-  ctx.moveTo(MAX_RADIUS - radius, (MAX_HEIGHT/2) - height/2);
-  ctx.lineTo(MAX_RADIUS - radius, (MAX_HEIGHT/2) + height/2);
-  ctx.stroke();
+  renderer.render(scene, camera);
 }
+
+const updateCylinder = () => {
+  let scaleFactorX = props.radius / cylinder.geometry.parameters.radiusTop;
+  let scaleFactorZ = props.radius / cylinder.geometry.parameters.radiusBottom;
+  let scaleFactorY = props.height / cylinder.geometry.parameters.height;
+  cylinder.scale.set(scaleFactorX, scaleFactorY, scaleFactorZ);
+}
+
+onMounted(() => {
+  renderer = new THREE.WebGLRenderer({canvas: document.querySelector('#canvas') as HTMLCanvasElement})
+  renderer.setPixelRatio(1);
+  renderer.setSize(300, 300);
+  renderer.render(scene, camera);
+
+  controls = new OrbitControls(camera, renderer.domElement)
+  animate()
+})
+
+watch(() => props.height, () => {updateCylinder()});
+watch(() => props.radius, () => {updateCylinder()});
+
 </script>
 
 <style lang="scss" scoped>
@@ -77,7 +79,7 @@ const draw = () => {
 
 @media screen and (max-width: 1080px) and (max-height: 900px) {
   .canvas {
-    display: none;
+    width: 100%;
   }
 }
 </style>
