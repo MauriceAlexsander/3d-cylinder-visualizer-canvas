@@ -65,6 +65,12 @@ const volume: ComputedRef<string> = computed(() => `${(Math.PI * Math.pow(radius
 @media screen and (max-width: 1080px) {
   .form-container {
     width: 100%;
+    font-size: 1rem;
+
+    input {
+      height: 24px;
+      margin: 6px 0;
+    }
   }
 }
 </style>
